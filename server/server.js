@@ -10,16 +10,22 @@ const contactRoutes = require("./routes/contact");
 
 const app = express();
 const PORT = process.env.PORT || 5001;
-
+const allowedOrigins = [
+  "https://rdebnath1234.github.io",
+  "http://localhost:3000"
+];
 // Middlewares
 app.use(cors({
-  origin: "https://rdebnath1234.github.io/portfolio/" // your frontend URL
+  origin: allowedOrigins // your frontend URL
 }));
 app.use(express.json());
 
 // Connect MongoDB
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI,{
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.error("MongoDB Error:", err));
 
