@@ -1,0 +1,42 @@
+├── client
+│   ├── .gitignore
+│   ├── README.md
+│   ├── package-lock.json
+│   ├── **package.json**
+│   ├── public
+│   │   ├── index.html
+│   │   └── pp.jpeg
+│   └── src
+│       ├── App.jsx
+│       ├── components
+│       │   ├── About.jsx
+│       │   ├── Contact.jsx
+│       │   ├── GlassDivider.jsx
+│       │   ├── Hero.jsx
+│       │   ├── Navbar.jsx
+│       │   ├── Projects.jsx
+│       │   ├── SectionBox.jsx
+│       │   └── Skills.jsx
+│       ├── contexts
+│       │   └── DarkModeContext.jsx
+│       ├── index.js
+│       └── styles
+│           ├── App.css
+│           └── index.css
+├── folder-structure.txt
+├── generateTree.js
+└── server
+    ├── **.env**
+    ├── data
+    │   ├── contact.json
+    │   ├── projects.json
+    │   └── skills.json
+    ├── models
+    │   └── Message.js
+    ├── package-lock.json
+    ├── **package.json**
+    ├── routes
+    │   ├── contact.js
+    │   ├── projects.js
+    │   └── skills.js
+    └── **server.js**
