@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import SectionBox from "./SectionBox";
+import { API_BASE } from "../config";
 
 export default function Contact() {
   const [info, setInfo] = useState(null);
@@ -15,7 +16,7 @@ export default function Contact() {
       setLoadingInfo(true);
       setErrorInfo(null);
       try {
-        const res = await fetch("http://localhost:5001/api/contact", { signal: ac.signal });
+        const res = await fetch(`${API_BASE}/api/contact`, { signal: ac.signal });
         if (!res.ok) throw new Error(`Server error: ${res.status}`);
         const data = await res.json();
         setInfo(data);

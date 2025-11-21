@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SectionBox from "./SectionBox";
-
+import { API_BASE } from "../config";
 export default function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +13,7 @@ export default function Projects() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch("http://localhost:5001/api/projects", { signal: ac.signal });
+        const res = await fetch(`${API_BASE}/api/projects`, { signal: ac.signal });
         if (!res.ok) throw new Error(`Server error: ${res.status}`);
         const data = await res.json();
         setProjects(Array.isArray(data) ? data : data.projects || []);

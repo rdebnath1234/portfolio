@@ -12,7 +12,9 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: "https://rdebnath1234.github.io/portfolio/" // your frontend URL
+}));
 app.use(express.json());
 
 // Connect MongoDB

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import SectionBox from "./SectionBox";
-
+import { API_BASE } from "../config";
 export default function Skills() {
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,7 +14,7 @@ export default function Skills() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch("http://localhost:5001/api/skills", { signal: ac.signal });
+        const res = await fetch(`${API_BASE}/api/skills`, { signal: ac.signal });
         if (!res.ok) throw new Error(`Server error: ${res.status}`);
         const data = await res.json();
         // Accept both arrays or object { skills: [...] }
