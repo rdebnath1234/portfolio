@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/rdebnath1234/portfolio/static/css/main.2d8a4e63.css",
+    "main.js": "/rdebnath1234/portfolio/static/js/main.ecd72782.js",
+    "index.html": "/rdebnath1234/portfolio/index.html",
+    "main.2d8a4e63.css.map": "/rdebnath1234/portfolio/static/css/main.2d8a4e63.css.map",
+    "main.ecd72782.js.map": "/rdebnath1234/portfolio/static/js/main.ecd72782.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2d8a4e63.css",
+    "static/js/main.ecd72782.js"
+  ]
+}
