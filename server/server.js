@@ -23,7 +23,7 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // Allow Postman or curl requests
+    if (!origin) return callback(null, true); // Allow Postman or curl
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg = "CORS policy does not allow this origin.";
       return callback(new Error(msg), false);
@@ -56,7 +56,7 @@ app.use("/api/projects", projectsRoutes);
 app.use("/api/contact", contactRoutes);
 
 // ===========================
-// ✅ Default Route
+// ✅ Default Route for API Test
 // ===========================
 app.get("/", (req, res) => {
   res.send("Portfolio Backend Running Successfully 🚀");
@@ -66,10 +66,12 @@ app.get("/", (req, res) => {
 // ✅ Serve React Frontend in Production
 // ===========================
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "client/build")));
+  const buildPath = path.join(__dirname, "client/build");
+  app.use(express.static(buildPath));
 
-  app.get("/*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client/build", "index.html"));
+  // Catch-all route for React Router
+  app.use((req, res) => {
+    res.sendFile(path.join(buildPath, "index.html"));
   });
 }
 
