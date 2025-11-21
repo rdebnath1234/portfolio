@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { motion } from "framer-motion";
 import { DarkModeContext } from "../contexts/DarkModeContext";
 import SectionBox from "./SectionBox";
-
+import { Link } from "react-router-dom";
 export default function Hero() {
   const { isDark } = useContext(DarkModeContext);
 
@@ -34,19 +34,18 @@ export default function Hero() {
               </p>
 
               <div className="mt-4 d-flex gap-3 flex-wrap">
-                <a
-                  href="/projects"
+                <Link
+                  to="/projects"
                   className="btn btn-outline-primary rounded-pill px-4 py-2"
                 >
                   View Projects
-                </a>
-
-                <a
-                  href="/contact"
+                </Link>
+                <Link
+                  to="/contact"
                   className="btn btn-primary rounded-pill px-4 py-2"
                 >
                   Contact Me
-                </a>
+                </Link>
               </div>
             </motion.div>
           </div>
