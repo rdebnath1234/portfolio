@@ -14,7 +14,8 @@ function Divider() {
       style={{
         width: "100%",
         height: "2px",
-        background: "linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent)",
+        background:
+          "linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent)",
         margin: "60px 0",
         backdropFilter: "blur(3px)",
       }}
@@ -28,7 +29,6 @@ export default function App() {
       <Navbar />
 
       <main className="pt-20">
-
         {/* Homepage */}
         <Routes>
           <Route
