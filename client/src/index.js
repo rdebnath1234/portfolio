@@ -6,7 +6,7 @@ import { DarkModeProvider } from "./contexts/DarkModeContext";
 import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <BrowserRouter basename="/rdebnath1234.github.io/portfolio">
+  <BrowserRouter basename={process.env.PUBLIC_URL}>
     <DarkModeProvider>
       <App />
     </DarkModeProvider>
