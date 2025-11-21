@@ -35,13 +35,13 @@ export default function Hero() {
 
               <div className="mt-4 d-flex gap-3 flex-wrap">
                 <Link
-                  to="/portfolio/projects"
+                  to="/projects"
                   className="btn btn-outline-primary rounded-pill px-4 py-2"
                 >
                   View Projects
                 </Link>
                 <Link
-                  to="/portfolio/contact"
+                  to="/contact"
                   className="btn btn-primary rounded-pill px-4 py-2"
                 >
                   Contact Me
