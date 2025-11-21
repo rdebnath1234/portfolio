@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const nodemailer = require("nodemailer");
 const Message = require("../models/Message"); // MongoDB model
-const contact = require("../data/contact.json"); // Static contact details
+const contact = require("../data/contact.json"); // Static contact info
 
 // ===========================
 // 📌 GET CONTACT INFO
@@ -10,7 +10,6 @@ const contact = require("../data/contact.json"); // Static contact details
 router.get("/", (req, res) => {
   res.json(contact);
 });
-
 
 // ===========================
 // 📌 POST CONTACT FORM (React → Node)
@@ -24,15 +23,15 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    // 1️⃣ ✔ Save message into MongoDB
+    // 1️⃣ Save message into MongoDB
     const newMessage = new Message({ name, email, message });
     await newMessage.save();
 
-    // 2️⃣ ✔ Send email using Nodemailer
-    let transporter = nodemailer.createTransport({
+    // 2️⃣ Send email using Nodemailer
+    const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.GMAIL_USER, // from .env
+        user: process.env.GMAIL_USER, // Gmail user from .env
         pass: process.env.GMAIL_PASS  // Gmail App Password
       }
     });
@@ -51,11 +50,17 @@ router.post("/", async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.json({ success: true, message: "Message sent successfully!" });
+    // 3️⃣ Respond success
+    res.status(201).json({ success: true, message: "Message sent successfully!" });
 
   } catch (error) {
     console.error("Contact Form Error:", error);
-    res.status(500).json({ success: false, error: "Server error" });
+
+    // Check if MongoDB error or email sending error
+    let errorMessage = "Server error";
+    if (error.code === 535) errorMessage = "Email authentication failed";
+
+    res.status(500).json({ success: false, error: errorMessage });
   }
 });
 
