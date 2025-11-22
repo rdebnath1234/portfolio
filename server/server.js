@@ -1,4 +1,4 @@
-require("dotenv").config(); // Load .env values
+require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
@@ -7,78 +7,70 @@ const nodemailer = require("nodemailer");
 const path = require("path");
 const fs = require("fs");
 
-// Routes
 const skillsRoutes = require("./routes/skills");
 const projectsRoutes = require("./routes/projects");
-
-// Models
 const Message = require("./models/Message");
 
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// ===========================
-// ✅ CORS Setup
-// ===========================
-const allowedOrigins = [
-  "https://rdebnath1234.github.io", // GitHub Pages frontend
-  "http://localhost:3000"           // Local frontend
-];
-
+/* ---------------------------------------------
+   ✅ CORS FIX — Works for GitHub Pages + Render
+---------------------------------------------- */
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // Allow Postman/curl
-    if (!allowedOrigins.includes(origin)) {
-      return callback(new Error("CORS policy does not allow this origin."), false);
-    }
-    return callback(null, true);
-  },
-  credentials: true
+  origin: [
+    "https://rdebnath1234.github.io",
+    "http://localhost:3000"
+  ],
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"],
 }));
 
-// ===========================
-// ✅ Body Parser
-// ===========================
+/* ---------------------------------------------
+   ✅ Body Parser
+---------------------------------------------- */
 app.use(express.json());
 
-// ===========================
-// ✅ MongoDB Connection
-// ===========================
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.error("MongoDB Connection Error:", err));
+/* ---------------------------------------------
+   ✅ MongoDB Connection
+---------------------------------------------- */
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.error("MongoDB Connection Error:", err));
 
-// ===========================
-// ✅ Nodemailer Setup
-// ===========================
+/* ---------------------------------------------
+   ✅ Nodemailer Setup
+---------------------------------------------- */
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS
+    pass: process.env.GMAIL_PASS   // MUST have NO SPACES
   }
 });
 
-// ===========================
-// ✅ API Routes
-// ===========================
+/* ---------------------------------------------
+   ✅ Routes
+---------------------------------------------- */
 app.use("/api/skills", skillsRoutes);
 app.use("/api/projects", projectsRoutes);
 
-// Contact form POST route
+/* ---------------------------------------------
+   ✅ Contact POST (Saves to Mongo + Sends Email)
+---------------------------------------------- */
 app.post("/api/contact", async (req, res) => {
   const { name, email, message } = req.body;
+
   if (!name || !email || !message) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
   try {
+    // Save to DB
     const newMessage = new Message({ name, email, message });
     await newMessage.save();
 
+    // Send Email
     await transporter.sendMail({
       from: process.env.GMAIL_USER,
       to: process.env.GMAIL_USER,
@@ -88,46 +80,50 @@ app.post("/api/contact", async (req, res) => {
 
     res.status(200).json({ message: "Message sent successfully" });
   } catch (err) {
-    console.error("Error sending message:", err);
+    console.error("Contact Error:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// Contact info GET route (reads from contact.json)
+/* ---------------------------------------------
+   ✅ Contact Info GET (Reads contact.json)
+---------------------------------------------- */
 app.get("/api/contact-info", (req, res) => {
-  const contactFilePath = path.join(__dirname, "data", "contact.json");
-  fs.readFile(contactFilePath, "utf8", (err, data) => {
+  const filePath = path.join(__dirname, "data", "contact.json");
+
+  fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
       console.error("Error reading contact.json:", err);
       return res.status(500).json({ error: "Could not read contact info" });
     }
-    const contactInfo = JSON.parse(data);
-    res.json(contactInfo);
+
+    res.json(JSON.parse(data));
   });
 });
 
-// ===========================
-// ✅ Default test route
-// ===========================
+/* ---------------------------------------------
+   ✅ Test Route
+---------------------------------------------- */
 app.get("/", (req, res) => {
   res.send("Portfolio Backend Running Successfully 🚀");
 });
 
-// ===========================
-// ✅ Serve React Frontend in Production (Optional)
-// ===========================
+/* ---------------------------------------------
+   ❗ OPTIONAL: Serve Build in Production
+---------------------------------------------- */
 if (process.env.NODE_ENV === "production") {
-  const buildPath = path.join(__dirname, "../client/build"); // adjust if client folder is outside server
-  app.use(express.static(buildPath));
+  const clientPath = path.join(__dirname, "../client/build");
+
+  app.use(express.static(clientPath));
 
   app.get("*", (req, res) => {
-    res.sendFile(path.join(buildPath, "index.html"));
+    res.sendFile(path.join(clientPath, "index.html"));
   });
 }
 
-// ===========================
-// ✅ Start Server
-// ===========================
+/* ---------------------------------------------
+   🚀 Start Server
+---------------------------------------------- */
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
