@@ -1,77 +1,83 @@
+require("dotenv").config(); // Load .env values
+
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const nodemailer = require("nodemailer");
-require("dotenv").config();
+const path = require("path");
+
+// Routes
+const skillsRoutes = require("./routes/skills");
+const projectsRoutes = require("./routes/projects");
+const contactRoutes = require("./routes/contact");
 
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// Import the schema
-const Message = require("./models/Message");
-
-// CORS setup
+// ===========================
+// ✅ CORS Setup
+// ===========================
 const allowedOrigins = [
-  "https://rdebnath1234.github.io",
-  "http://localhost:3000"
+  "https://rdebnath1234.github.io", // GitHub Pages frontend
+  "http://localhost:3000"           // Local frontend
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
+    if (!origin) return callback(null, true); // Allow Postman or curl
     if (allowedOrigins.indexOf(origin) === -1) {
-      return callback(new Error("CORS policy does not allow this origin."), false);
+      const msg = "CORS policy does not allow this origin.";
+      return callback(new Error(msg), false);
     }
     return callback(null, true);
   },
   credentials: true
 }));
 
+// ===========================
+// ✅ Body Parser
+// ===========================
 app.use(express.json());
 
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.error("MongoDB connection error:", err));
+// ===========================
+// ✅ MongoDB Connection
+// ===========================
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log("MongoDB Connected"))
+.catch(err => console.error("MongoDB Connection Error:", err));
 
-// Nodemailer setup
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS
-  }
+// ===========================
+// ✅ API Routes
+// ===========================
+app.use("/api/skills", skillsRoutes);
+app.use("/api/projects", projectsRoutes);
+app.use("/api/contact", contactRoutes);
+
+// ===========================
+// ✅ Default Route for API Test
+// ===========================
+app.get("/", (req, res) => {
+  res.send("Portfolio Backend Running Successfully 🚀");
 });
 
-// Contact form route
-app.post("/api/contact", async (req, res) => {
-  const { name, email, message } = req.body;
+// ===========================
+// ✅ Serve React Frontend in Production
+// ===========================
+if (process.env.NODE_ENV === "production") {
+  const buildPath = path.join(__dirname, "client/build");
+  app.use(express.static(buildPath));
 
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: "All fields are required" });
-  }
+  // Catch-all route for React Router
+  app.use((req, res) => {
+    res.sendFile(path.join(buildPath, "index.html"));
+  });
+}
 
-  try {
-    // Save message in MongoDB
-    const newMessage = new Message({ name, email, message });
-    await newMessage.save();
-
-    // Send notification email
-    await transporter.sendMail({
-      from: process.env.GMAIL_USER,
-      to: process.env.GMAIL_USER,
-      subject: `New Message from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`
-    });
-
-    res.status(200).json({ message: "Message sent successfully" });
-  } catch (err) {
-    console.error("Error sending message:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-// Start server
+// ===========================
+// ✅ Start Server
+// ===========================
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
