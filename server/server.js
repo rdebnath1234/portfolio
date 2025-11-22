@@ -88,7 +88,7 @@ app.post("/api/contact", async (req, res) => {
 /* ---------------------------------------------
    ✅ Contact Info GET (Reads contact.json)
 ---------------------------------------------- */
-app.get("/api/contact-info", (req, res) => {
+app.get("/api/contact", (req, res) => {
   const filePath = path.join(__dirname, "data", "contact.json");
 
   fs.readFile(filePath, "utf8", (err, data) => {
