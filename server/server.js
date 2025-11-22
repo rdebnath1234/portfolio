@@ -58,32 +58,34 @@ app.use("/api/projects", projectsRoutes);
 /* ---------------------------------------------
    ✅ Contact POST (Saves to Mongo + Sends Email)
 ---------------------------------------------- */
-app.post("/api/contact", async (req, res) => {
-  const { name, email, message } = req.body;
+// app.post("/api/contact", async (req, res) => {
+//   const { name, email, message } = req.body;
 
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: "All fields are required" });
-  }
+//   if (!name || !email || !message) {
+//     return res.status(400).json({ error: "All fields are required" });
+//   }
 
-  try {
-    // Save to DB
-    const newMessage = new Message({ name, email, message });
-    await newMessage.save();
+//   try {
+//     // Save to DB
+//     const newMessage = new Message({ name, email, message });
+//     await newMessage.save();
 
-    // Send Email
-    await transporter.sendMail({
-      from: process.env.GMAIL_USER,
-      to: process.env.GMAIL_USER,
-      subject: `New Message from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`
-    });
+//     // Send Email
+//     await transporter.sendMail({
+//       from: process.env.GMAIL_USER,
+//       to: process.env.GMAIL_USER,
+//       subject: `New Message from ${name}`,
+//       text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`
+//     });
 
-    res.status(200).json({ message: "Message sent successfully" });
-  } catch (err) {
-    console.error("Contact Error:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
+//     res.status(200).json({ message: "Message sent successfully" });
+//   } catch (err) {
+//     console.error("Contact Error:", err);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
+const contactRoutes = require("./routes/contact");
+app.use("/api/contact", contactRoutes);
 
 /* ---------------------------------------------
    ✅ Contact Info GET (Reads contact.json)
