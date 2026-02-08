@@ -1,84 +1,70 @@
 import React, { useContext } from "react";
 import { motion } from "framer-motion";
 import { DarkModeContext } from "../contexts/DarkModeContext";
-import SectionBox from "./SectionBox";
-import { Link } from "react-router-dom";
+
 export default function Hero() {
   const { isDark } = useContext(DarkModeContext);
 
   return (
-    <section id="about" className="pt-5">
-      <SectionBox>
-        {/* unchanged structure, static content */}
-        <div className="row align-items-center">
-          <div className="col-md-7">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <h1 className="fw-bold display-5 mb-3">
-                Hi, I’m <span className="text-primary">Riya Debnath</span>
-              </h1>
+    <section id="home" data-section className="section hero">
+      <div className="container hero-grid">
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+        >
+          <p className="eyebrow">Full-Stack Developer · 5+ Years in IT</p>
+          <h1 className="hero-title">
+            Riya Debnath
+            <span className="hero-title-accent">Builds clean, scalable products.</span>
+          </h1>
+          <p className="hero-subtitle">
+            I design and ship web and mobile experiences that feel effortless to
+            use, stay fast under load, and are easy to maintain. My work blends
+            thoughtful UX with production-grade engineering.
+          </p>
 
-              <p
-                className="mt-3 fs-5"
-                style={{ maxWidth: "600px", lineHeight: "1.6" }}
-              >
-                Aspiring full stack developer focused on building clean,
-                reliable web apps. Strong grasp of{" "}
-                <b>JavaScript, React, Node.js, and SQL</b>
-                with hands-on projects that turn ideas into working products.
-                Quick learner who enjoys solving problems, writing clear code,
-                and collaborating to ship features.
-              </p>
+          <div className="hero-actions">
+            <a className="btn btn-primary" href="mailto:riya.debnath@email.com">
+              Hire Me
+            </a>
+            <a className="btn btn-ghost" href="#projects">
+              View Projects
+            </a>
+            <a className="btn btn-outline" href="/resume.pdf" download>
+              Download Resume
+            </a>
+          </div>
 
-              <div className="mt-4 d-flex gap-3 flex-wrap">
-                <Link
-                  to="/projects"
-                  className="btn btn-outline-primary rounded-pill px-4 py-2"
-                >
-                  View Projects
-                </Link>
-                <Link
-                  to="/contact"
-                  className="btn btn-primary rounded-pill px-4 py-2"
-                >
-                  Contact Me
-                </Link>
+          <div className="hero-stats">
+            {[
+              { label: "Years Experience", value: "5+" },
+              { label: "Tech Domains", value: "Web · Mobile · API" },
+              { label: "Focus", value: "Performance + UX" }
+            ].map((stat) => (
+              <div key={stat.label} className="stat-card">
+                <p className="stat-value">{stat.value}</p>
+                <p className="stat-label">{stat.label}</p>
               </div>
-            </motion.div>
+            ))}
           </div>
+        </motion.div>
 
-          <div className="col-md-5 text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="position-relative shadow rounded-circle p-2"
-              style={{
-                background: isDark
-                  ? "rgba(255,255,255,0.05)"
-                  : "rgba(0,0,0,0.03)",
-                width: "200px",
-                height: "200px",
-                margin: "0 auto",
-                flexShrink: 0,
-              }}
-            >
-              <img
-                src={process.env.PUBLIC_URL + "/pp.jpeg"}
-                alt="Profile"
-                className="rounded-circle w-100 h-100"
-                style={{
-                  objectFit: "cover",
-                  border: "4px solid rgba(0,0,0,0.06)",
-                }}
-              />
-            </motion.div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className={`hero-portrait ${isDark ? "hero-portrait-dark" : ""}`}
+        >
+          <img
+            src={process.env.PUBLIC_URL + "/pp.jpeg"}
+            alt="Riya Debnath portrait"
+          />
+          <div className="hero-badge">
+            <p>Open to full-time + freelance roles</p>
           </div>
-        </div>
-      </SectionBox>
+        </motion.div>
+      </div>
     </section>
   );
 }

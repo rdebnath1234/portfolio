@@ -1,83 +1,71 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import SectionBox from "./SectionBox";
-import { API_BASE } from "../config";
+
+const SKILL_GROUPS = [
+  {
+    title: "Frontend",
+    items: ["React.js", "JavaScript (ES6+)", "HTML5", "CSS3", "Responsive UI", "Accessibility"]
+  },
+  {
+    title: "Backend",
+    items: ["Node.js", "Express.js", "REST APIs", "Auth & RBAC", "API Documentation"]
+  },
+  {
+    title: "Databases",
+    items: ["MongoDB", "Mongoose", "Data Modeling", "Indexing", "Aggregation"]
+  },
+  {
+    title: "Mobile",
+    items: ["React Native", "Flutter", "Cross-platform UI", "State Management"]
+  },
+  {
+    title: "Tools & Practices",
+    items: ["Git", "CI/CD Basics", "Testing & QA", "Clean Code", "Performance Tuning"]
+  }
+];
+
 export default function Skills() {
-  const [skills, setSkills] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const ac = new AbortController();
-
-    async function load() {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch(`${API_BASE}/api/skills`, { signal: ac.signal });
-        if (!res.ok) throw new Error(`Server error: ${res.status}`);
-        const data = await res.json();
-        // Accept both arrays or object { skills: [...] }
-        setSkills(Array.isArray(data) ? data : data.skills || []);
-      } catch (err) {
-        if (err.name !== "AbortError") {
-          console.error("Error fetching skills:", err);
-          setError("Could not load skills.");
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    load();
-    return () => ac.abort();
-  }, []);
-
   return (
-    <section id="skills" className="pt-3">
-      <SectionBox>
-        <h2 className="fw-bold mb-4" style={{ fontSize: "2rem" }}>
-          Skills
-        </h2>
+    <section id="skills" data-section className="section muted-surface">
+      <div className="container">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+        >
+          <p className="eyebrow">Skills</p>
+          <h2 className="section-title">Balanced across frontend, backend, and mobile.</h2>
+          <p className="section-lead">
+            I build end-to-end experiences with a focus on clarity, performance,
+            and maintainability.
+          </p>
+        </motion.div>
 
-        {loading && <p>Loading skills…</p>}
-        {error && <p className="text-danger">{error}</p>}
-
-        {!loading && !error && (
-          <div className="row g-4">
-            {skills.length === 0 ? (
-              <div className="col-12">
-                <p className="text-muted">No skills found.</p>
-              </div>
-            ) : (
-              skills.map((s, i) => (
-                <motion.div
-                  key={s.id || s._id || i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.06, duration: 0.45 }}
-                  className="col-6 col-md-3"
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.05, boxShadow: "0 8px 20px rgba(0,0,0,0.12)" }}
-                    className="p-4 rounded-4 text-center shadow-sm"
-                    style={{
-                      background: "rgba(255, 255, 255, 0.02)",
-                      backdropFilter: "blur(6px)",
-                      cursor: "pointer",
-                      transition: "0.3s"
-                    }}
-                  >
-                    <span className="fw-medium" style={{ fontSize: "1.05rem", fontStyle: "italic" }}>
-                      {typeof s === "string" ? s : s.name}
+        <div className="row g-4 mt-1">
+          {SKILL_GROUPS.map((group, idx) => (
+            <motion.div
+              key={group.title}
+              className="col-12 col-md-6 col-lg-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: idx * 0.05 }}
+            >
+              <div className="card-surface skill-card">
+                <h3>{group.title}</h3>
+                <div className="chip-grid">
+                  {group.items.map((item) => (
+                    <span key={item} className="chip">
+                      {item}
                     </span>
-                  </motion.div>
-                </motion.div>
-              ))
-            )}
-          </div>
-        )}
-      </SectionBox>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
