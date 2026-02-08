@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { API_BASE } from "../config";
 
-const SKILL_GROUPS = [
+const CATEGORY_KEYWORDS = [
+  { title: "Frontend", keys: ["react", "html", "css", "javascript"] },
+  { title: "Backend", keys: ["node", "express", "api"] },
+  { title: "Databases", keys: ["mongo", "mongoose", "sql", "database"] },
+  { title: "Mobile", keys: ["react native", "flutter", "mobile"] },
+  { title: "Tools & Practices", keys: ["git", "testing", "qa", "bootstrap"] }
+];
+
+const FALLBACK_GROUPS = [
   {
     title: "Frontend",
     items: ["React.js", "JavaScript (ES6+)", "HTML5", "CSS3", "Responsive UI", "Accessibility"]
@@ -25,6 +34,54 @@ const SKILL_GROUPS = [
 ];
 
 export default function Skills() {
+  const [skills, setSkills] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const ac = new AbortController();
+    async function load() {
+      setLoading(true);
+      setError("");
+      try {
+        const res = await fetch(`${API_BASE}/api/skills`, { signal: ac.signal });
+        if (!res.ok) throw new Error(`Server error: ${res.status}`);
+        const data = await res.json();
+        setSkills(Array.isArray(data) ? data : data.skills || []);
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error("Error fetching skills:", err);
+          setError("Could not load skills.");
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+    return () => ac.abort();
+  }, []);
+
+  const groupedSkills = useMemo(() => {
+    if (!skills.length) return null;
+    const groups = CATEGORY_KEYWORDS.map((group) => ({
+      title: group.title,
+      items: []
+    }));
+
+    skills.forEach((skill) => {
+      const lower = String(skill).toLowerCase();
+      const match = CATEGORY_KEYWORDS.find((group) =>
+        group.keys.some((key) => lower.includes(key))
+      );
+      const group = groups.find((g) => g.title === (match ? match.title : "Tools & Practices"));
+      if (group) group.items.push(skill);
+    });
+
+    return groups.filter((group) => group.items.length > 0);
+  }, [skills]);
+
+  const groupsToRender = groupedSkills && groupedSkills.length > 0 ? groupedSkills : FALLBACK_GROUPS;
+
   return (
     <section id="skills" data-section className="section muted-surface">
       <div className="container">
@@ -40,10 +97,12 @@ export default function Skills() {
             I build end-to-end experiences with a focus on clarity, performance,
             and maintainability.
           </p>
+          {loading && <p className="section-text">Loading skills…</p>}
+          {error && <p className="section-text">{error}</p>}
         </motion.div>
 
         <div className="row g-4 mt-1">
-          {SKILL_GROUPS.map((group, idx) => (
+          {groupsToRender.map((group, idx) => (
             <motion.div
               key={group.title}
               className="col-12 col-md-6 col-lg-4"

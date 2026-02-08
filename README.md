@@ -1,12 +1,13 @@
 # Riya Debnath Portfolio
 
-Modern, recruiter‑ready developer portfolio built with React. It includes a full one‑page layout with Hero, About, Skills, Experience, Projects, Open Source, and Contact sections, plus a polished UI system and smooth section navigation.
+Modern, recruiter‑ready developer portfolio built with React. It includes a full one‑page layout with Hero, About, Skills, Experience, Projects, Open Source, and Contact sections, plus a polished UI system and smooth section navigation. The frontend is wired to the Node/Express API for skills, projects, and contact.
 
 ## Highlights
 - Single‑page layout with smooth anchor navigation
 - Clear, professional content geared toward recruiters
 - Responsive design with bold typography and custom theme tokens
 - Optional dark mode via context toggle
+- Live data from `/api/skills`, `/api/projects`, and `/api/contact`
 
 ## Tech Stack
 - React
@@ -25,6 +26,20 @@ npm start
 ```bash
 cd /Users/riyadebnathdas/Applications/my-portfolio/client
 npm run build
+```
+
+## API Backend
+The frontend consumes the API provided by the server folder:
+- Skills: `GET /api/skills`
+- Projects: `GET /api/projects`
+- Contact info: `GET /api/contact`
+- Contact form: `POST /api/contact`
+
+To run the backend locally:
+```bash
+cd /Users/riyadebnathdas/Applications/my-portfolio/server
+npm install
+npm start
 ```
 
 ## Resume

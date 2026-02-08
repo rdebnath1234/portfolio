@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { API_BASE } from "../config";
 
-const PROJECTS = [
+const PROJECT_DETAILS = [
   {
     title: "Virtual Pet Simulator",
     summary:
@@ -45,6 +46,51 @@ const PROJECTS = [
 ];
 
 export default function Projects() {
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const ac = new AbortController();
+    async function load() {
+      setLoading(true);
+      setError("");
+      try {
+        const res = await fetch(`${API_BASE}/api/projects`, { signal: ac.signal });
+        if (!res.ok) throw new Error(`Server error: ${res.status}`);
+        const data = await res.json();
+        setProjects(Array.isArray(data) ? data : data.projects || []);
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error("Error fetching projects:", err);
+          setError("Could not load projects.");
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+    return () => ac.abort();
+  }, []);
+
+  const mergedProjects = useMemo(() => {
+    if (!projects.length) return PROJECT_DETAILS;
+    return projects.map((proj) => {
+      const name = proj.title || proj.name || "";
+      const detail = PROJECT_DETAILS.find(
+        (item) => item.title.toLowerCase() === name.toLowerCase()
+      );
+      return {
+        title: name || detail?.title || "Project",
+        summary: detail?.summary || "Project summary coming soon.",
+        stack: detail?.stack || [],
+        features: detail?.features || [],
+        challenges: detail?.challenges || [],
+        link: proj.link || detail?.link
+      };
+    });
+  }, [projects]);
+
   return (
     <section id="projects" data-section className="section">
       <div className="container">
@@ -60,10 +106,12 @@ export default function Projects() {
             Each project reflects real-world constraints: performance, clarity,
             and scalable systems.
           </p>
+          {loading && <p className="section-text">Loading projects…</p>}
+          {error && <p className="section-text">{error}</p>}
         </motion.div>
 
         <div className="row g-4 mt-2">
-          {PROJECTS.map((project, idx) => (
+          {mergedProjects.map((project, idx) => (
             <motion.div
               key={project.title}
               className="col-12 col-lg-6"
@@ -100,9 +148,15 @@ export default function Projects() {
                     </ul>
                   </div>
                 </div>
-                <button className="btn btn-ghost" type="button">
-                  View Case Study
-                </button>
+                {project.link ? (
+                  <a className="btn btn-ghost" href={project.link} target="_blank" rel="noreferrer">
+                    View Project
+                  </a>
+                ) : (
+                  <button className="btn btn-ghost" type="button">
+                    View Case Study
+                  </button>
+                )}
               </div>
             </motion.div>
           ))}

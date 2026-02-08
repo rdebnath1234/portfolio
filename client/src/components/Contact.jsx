@@ -1,19 +1,64 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { API_BASE } from "../config";
 
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState({ message: "", type: "" });
+  const [info, setInfo] = useState(null);
+  const [loadingInfo, setLoadingInfo] = useState(true);
+  const [errorInfo, setErrorInfo] = useState("");
+
+  useEffect(() => {
+    const ac = new AbortController();
+    async function load() {
+      setLoadingInfo(true);
+      setErrorInfo("");
+      try {
+        const res = await fetch(`${API_BASE}/api/contact`, { signal: ac.signal });
+        if (!res.ok) throw new Error(`Server error: ${res.status}`);
+        const data = await res.json();
+        setInfo(data);
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error("Error loading contact info:", err);
+          setErrorInfo("Could not load contact info.");
+        }
+      } finally {
+        setLoadingInfo(false);
+      }
+    }
+    load();
+    return () => ac.abort();
+  }, []);
 
   const handleChange = (event) => {
     setForm((prev) => ({ ...prev, [event.target.name]: event.target.value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    setStatus("Thanks! Your message is ready to be sent.");
-    setForm({ name: "", email: "", message: "" });
-    setTimeout(() => setStatus(""), 3500);
+    setStatus({ message: "Sending…", type: "" });
+
+    try {
+      const res = await fetch(`${API_BASE}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form)
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setStatus({ message: "Message sent successfully!", type: "success" });
+        setForm({ name: "", email: "", message: "" });
+      } else {
+        setStatus({ message: data.error || data.message || "Failed to send message.", type: "error" });
+      }
+    } catch (error) {
+      setStatus({ message: "Error sending message.", type: "error" });
+    } finally {
+      setTimeout(() => setStatus({ message: "", type: "" }), 4000);
+    }
   };
 
   return (
@@ -37,27 +82,31 @@ export default function Contact() {
           <div className="col-12 col-lg-5">
             <div className="card-surface contact-card">
               <h3>Contact Details</h3>
-              <p>
-                <strong>Email:</strong>{" "}
-                <a href="mailto:riya.debnath@email.com">
-                  riya.debnath@email.com
-                </a>
-              </p>
-              <p>
-                <strong>LinkedIn:</strong>{" "}
-                <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">
-                  linkedin.com/in/riya-debnath
-                </a>
-              </p>
-              <p>
-                <strong>GitHub:</strong>{" "}
-                <a href="https://github.com/" target="_blank" rel="noreferrer">
-                  github.com/riya-debnath
-                </a>
-              </p>
-              <p>
-                <strong>Location:</strong> Remote · Open to relocation
-              </p>
+              {loadingInfo && <p>Loading contact info…</p>}
+              {errorInfo && <p>{errorInfo}</p>}
+              {info && (
+                <>
+                  <p>
+                    <strong>Email:</strong>{" "}
+                    <a href={`mailto:${info.email}`}>{info.email}</a>
+                  </p>
+                  <p>
+                    <strong>LinkedIn:</strong>{" "}
+                    <a href={info.linkedin} target="_blank" rel="noreferrer">
+                      {info.linkedin}
+                    </a>
+                  </p>
+                  <p>
+                    <strong>GitHub:</strong>{" "}
+                    <a href={info.github} target="_blank" rel="noreferrer">
+                      {info.github}
+                    </a>
+                  </p>
+                  <p>
+                    <strong>Location:</strong> {info.location}
+                  </p>
+                </>
+              )}
               <div className="contact-pill">Responds within 24-48 hours</div>
             </div>
           </div>
@@ -106,11 +155,10 @@ export default function Contact() {
                 <button className="btn btn-primary" type="submit">
                   Send Message
                 </button>
-                {status && <span className="form-status">{status}</span>}
+                {status.message && <span className="form-status">{status.message}</span>}
               </div>
               <p className="form-note">
-                Optional backend: connect to a Node.js + MongoDB endpoint for
-                production handling.
+                Messages are stored securely and forwarded via email.
               </p>
             </form>
           </div>
