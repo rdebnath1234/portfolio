@@ -42,6 +42,10 @@ npm install
 npm start
 ```
 
+## Data Sources
+- Skills are served from `/Users/riyadebnathdas/Applications/my-portfolio/server/data/skills.json`.
+- Project case studies are served from `/Users/riyadebnathdas/Applications/my-portfolio/server/data/projects.json`.
+
 ## Resume
 Replace the placeholder file at:
 `/Users/riyadebnathdas/Applications/my-portfolio/client/public/resume.pdf`

@@ -1,4 +1,34 @@
 [
-  { "id": 1, "name": "Portfolio Website", "link": "https://rdebnath1234.github.io/portfolio/" },
-  { "id": 2, "name": "E-commerce App", "link": "https://rdebnath1234.github.io/foodcar/" }
+  {
+    "id": 1,
+    "name": "Virtual Pet Simulator",
+    "description": "Interactive web game that teaches state management and event-driven UI through a playful pet companion.",
+    "stack": ["HTML", "CSS", "JavaScript"],
+    "features": ["Time-based mood changes", "Mini games and rewards", "Persistent pet state"],
+    "challenges": ["State transitions without frameworks", "Balancing performance and animation smoothness"]
+  },
+  {
+    "id": 2,
+    "name": "Weather Intelligence App",
+    "description": "API-driven forecast experience with location search, smart alerts, and accessible data visualization.",
+    "stack": ["React", "OpenWeather API", "CSS"],
+    "features": ["Geolocation + search", "Hourly and 7-day views", "Severe weather highlights"],
+    "challenges": ["Handling API rate limits", "Designing responsive data cards"]
+  },
+  {
+    "id": 3,
+    "name": "Food Ordering Platform",
+    "description": "Flutter-based ordering flow with cart, live tracking, and restaurant discovery.",
+    "stack": ["Flutter", "Dart", "Firebase"],
+    "features": ["Real-time order status", "Saved favorites and reorder", "Promo and loyalty logic"],
+    "challenges": ["Offline-first caching", "Complex UI states in a single flow"]
+  },
+  {
+    "id": 4,
+    "name": "MERN Project Hub",
+    "description": "Full-stack app for teams to track work, approvals, and delivery status.",
+    "stack": ["React", "Node.js", "MongoDB", "Express"],
+    "features": ["Role-based access", "Audit trail", "Analytics dashboard"],
+    "challenges": ["Designing scalable schemas", "Optimizing list queries"]
+  }
 ]

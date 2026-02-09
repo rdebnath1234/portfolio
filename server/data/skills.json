@@ -1,1 +1,27 @@
-["HTML", "CSS", "JavaScript", "React", "Node.js", "MongoDB", "Bootstrap", "Git"]
+[
+  "React.js",
+  "JavaScript (ES6+)",
+  "HTML5",
+  "CSS3",
+  "Responsive UI",
+  "Accessibility",
+  "Node.js",
+  "Express.js",
+  "REST APIs",
+  "Auth & RBAC",
+  "API Documentation",
+  "MongoDB",
+  "Mongoose",
+  "Data Modeling",
+  "Indexing",
+  "Aggregation",
+  "React Native",
+  "Flutter",
+  "Cross-platform UI",
+  "State Management",
+  "Git",
+  "CI/CD Basics",
+  "Testing & QA",
+  "Clean Code",
+  "Performance Tuning"
+]

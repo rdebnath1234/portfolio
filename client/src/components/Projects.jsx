@@ -34,14 +34,6 @@ const PROJECT_DETAILS = [
     stack: ["React", "Node.js", "MongoDB", "Express"],
     features: ["Role-based access", "Audit trail", "Analytics dashboard"],
     challenges: ["Designing scalable schemas", "Optimizing list queries"]
-  },
-  {
-    title: "Customer Care Insights",
-    summary:
-      "Dashboard for claims processing teams to reduce turnaround time and highlight bottlenecks.",
-    stack: ["React", "Node.js", "MongoDB", "Charting"],
-    features: ["Queue insights", "SLA monitoring", "Exportable reports"],
-    challenges: ["Data normalization for reporting", "Keeping UI fast on large datasets"]
   }
 ];
 
