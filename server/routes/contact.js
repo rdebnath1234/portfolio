@@ -50,10 +50,17 @@ router.post("/", async (req, res) => {
       `
     };
 
-    await transporter.sendMail(mailOptions);
-
-    // 3️⃣ Respond success
-    res.status(201).json({ success: true, message: "Message sent successfully!" });
+    try {
+      await transporter.sendMail(mailOptions);
+      return res.status(201).json({ success: true, message: "Message sent successfully!" });
+    } catch (mailError) {
+      console.error("Email send failed:", mailError);
+      return res.status(201).json({
+        success: true,
+        message: "Message saved, but email delivery failed.",
+        mailError: mailError.code || "EMAIL_FAILED"
+      });
+    }
 
   } catch (error) {
     console.error("Contact Form Error:", error);
