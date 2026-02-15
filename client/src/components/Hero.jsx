@@ -1,9 +1,31 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { DarkModeContext } from "../contexts/DarkModeContext";
+import { API_BASE } from "../config";
 
 export default function Hero() {
   const { isDark } = useContext(DarkModeContext);
+  const [hireEmail, setHireEmail] = useState("riyakolkatawb@gmail.com");
+
+  useEffect(() => {
+    const ac = new AbortController();
+    async function loadContact() {
+      try {
+        const res = await fetch(`${API_BASE}/api/contact`, { signal: ac.signal });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data?.email) {
+          setHireEmail(data.email);
+        }
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error("Error loading hire email:", err);
+        }
+      }
+    }
+    loadContact();
+    return () => ac.abort();
+  }, []);
 
   return (
     <section id="home" data-section className="section hero">
@@ -25,7 +47,7 @@ export default function Hero() {
           </p>
 
           <div className="hero-actions">
-            <a className="btn btn-primary" href="mailto:riya.debnath@email.com">
+            <a className="btn btn-primary" href={`mailto:${hireEmail}`}>
               Hire Me
             </a>
             <a className="btn btn-ghost" href="#projects">

@@ -9,7 +9,8 @@ const PROJECT_DETAILS = [
       "Interactive web game that teaches state management and event-driven UI through a playful pet companion.",
     stack: ["HTML", "CSS", "JavaScript"],
     features: ["Time-based mood changes", "Mini games and rewards", "Persistent pet state"],
-    challenges: ["State transitions without frameworks", "Balancing performance and animation smoothness"]
+    challenges: ["State transitions without frameworks", "Balancing performance and animation smoothness"],
+    caseStudyPdf: `${process.env.PUBLIC_URL}/case-studies/virtual-pet-simulator.pdf`
   },
   {
     title: "Weather Intelligence App",
@@ -17,7 +18,8 @@ const PROJECT_DETAILS = [
       "API-driven forecast experience with location search, smart alerts, and accessible data visualization.",
     stack: ["React", "OpenWeather API", "CSS"],
     features: ["Geolocation + search", "Hourly and 7-day views", "Severe weather highlights"],
-    challenges: ["Handling API rate limits", "Designing responsive data cards"]
+    challenges: ["Handling API rate limits", "Designing responsive data cards"],
+    caseStudyPdf: `${process.env.PUBLIC_URL}/case-studies/weather-intelligence-app.pdf`
   },
   {
     title: "Food Ordering Platform",
@@ -25,7 +27,8 @@ const PROJECT_DETAILS = [
       "Flutter-based ordering flow with cart, live tracking, and restaurant discovery.",
     stack: ["Flutter", "Dart", "Firebase"],
     features: ["Real-time order status", "Saved favorites and reorder", "Promo and loyalty logic"],
-    challenges: ["Offline-first caching", "Complex UI states in a single flow"]
+    challenges: ["Offline-first caching", "Complex UI states in a single flow"],
+    caseStudyPdf: `${process.env.PUBLIC_URL}/case-studies/food-ordering-platform.pdf`
   },
   {
     title: "MERN Project Hub",
@@ -33,7 +36,8 @@ const PROJECT_DETAILS = [
       "Full-stack app for teams to track work, approvals, and delivery status.",
     stack: ["React", "Node.js", "MongoDB", "Express"],
     features: ["Role-based access", "Audit trail", "Analytics dashboard"],
-    challenges: ["Designing scalable schemas", "Optimizing list queries"]
+    challenges: ["Designing scalable schemas", "Optimizing list queries"],
+    caseStudyPdf: `${process.env.PUBLIC_URL}/case-studies/mern-project-hub.pdf`
   }
 ];
 
@@ -78,7 +82,8 @@ export default function Projects() {
         stack: detail?.stack || [],
         features: detail?.features || [],
         challenges: detail?.challenges || [],
-        link: proj.link || detail?.link
+        link: proj.link || detail?.link,
+        caseStudyPdf: proj.caseStudyPdf || detail?.caseStudyPdf
       };
     });
   }, [projects]);
@@ -140,15 +145,23 @@ export default function Projects() {
                     </ul>
                   </div>
                 </div>
-                {project.link ? (
-                  <a className="btn btn-ghost" href={project.link} target="_blank" rel="noreferrer">
-                    View Project
-                  </a>
-                ) : (
-                  <button className="btn btn-ghost" type="button">
-                    View Case Study
-                  </button>
-                )}
+                <div className="d-flex gap-2 flex-wrap">
+                  {project.link && (
+                    <a className="btn btn-ghost" href={project.link} target="_blank" rel="noreferrer">
+                      View Project
+                    </a>
+                  )}
+                  {project.caseStudyPdf && (
+                    <a
+                      className="btn btn-outline"
+                      href={project.caseStudyPdf}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View Case Study
+                    </a>
+                  )}
+                </div>
               </div>
             </motion.div>
           ))}
