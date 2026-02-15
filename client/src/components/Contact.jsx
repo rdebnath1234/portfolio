@@ -121,6 +121,7 @@ export default function Contact() {
                     name="name"
                     type="text"
                     placeholder="Your name"
+                    autoComplete="name"
                     value={form.name}
                     onChange={handleChange}
                     required
@@ -133,6 +134,7 @@ export default function Contact() {
                     name="email"
                     type="email"
                     placeholder="you@email.com"
+                    autoComplete="email"
                     value={form.email}
                     onChange={handleChange}
                     required
@@ -145,6 +147,7 @@ export default function Contact() {
                     name="message"
                     rows="5"
                     placeholder="Tell me about your product or role."
+                    autoComplete="off"
                     value={form.message}
                     onChange={handleChange}
                     required
