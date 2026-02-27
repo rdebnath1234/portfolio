@@ -12,6 +12,7 @@ Modern, recruiter-ready developer portfolio built with React and a Node/Express 
 - Contact details + contact form submission
 
 ## Feature Screenshots
+Screenshots last refreshed: February 27, 2026.
 
 ### Full Page
 ![Full portfolio page](docs/screenshots/full-page.png)
